@@ -81,7 +81,7 @@ const ProductEdit = ({ onVoltar }) => {
             <button
             type="button"
             onClick={onVoltar}
-            className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400
+            className="cursor-pointer w-8 h-8 flex items-center justify-center rounded-lg text-gray-400
                 hover:text-gray-700 hover:bg-gray-100 transition-colors"
             >
             <BackIcon />

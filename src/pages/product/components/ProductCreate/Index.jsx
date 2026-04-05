@@ -141,7 +141,7 @@ const ProductCreate = ({ onVoltar }) => {
         <button
           type="button"
           onClick={onVoltar}
-          className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400
+          className="cursor-pointer w-8 h-8 flex items-center justify-center rounded-lg text-gray-400
             hover:text-gray-700 hover:bg-gray-100 transition-colors"
         >
           <BackIcon />
@@ -327,7 +327,7 @@ const ProductCreate = ({ onVoltar }) => {
           <button
             type="button"
             onClick={onVoltar}
-            className="text-sm px-4 py-2.5 rounded-lg border border-gray-200 text-gray-600
+            className="cursor-pointer text-sm px-4 py-2.5 rounded-lg border border-gray-200 text-gray-600
               hover:bg-gray-50 transition-colors"
           >
             Cancelar
@@ -335,7 +335,7 @@ const ProductCreate = ({ onVoltar }) => {
           <button
             type="submit"
             disabled={salvando}
-            className="text-sm px-5 py-2.5 rounded-lg bg-blue-600 text-white
+            className="cursor-pointer text-sm px-5 py-2.5 rounded-lg bg-blue-600 text-white
               hover:bg-blue-700 active:scale-95 transition-all duration-150
               disabled:opacity-60 disabled:cursor-not-allowed"
           >
