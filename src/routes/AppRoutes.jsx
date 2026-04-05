@@ -1,0 +1,56 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import PublicRouteLogin from "./PublicRouteLogin";
+import PrivateRoute from "./PrivateRoute";
+
+// pages
+import Login from "../pages/login/Index";
+import NotFound from "../pages/notFound/Index";
+import Dashboard from "../pages/dashboard/Index";
+import ProductPage from "../pages/product/Index";
+import ProductsList from "../pages/product/components/ProductList/Index";
+import ProductCreate from "../pages/product/components/ProductCreate/Index";
+
+export default function AppRoutes() {
+  return (
+    <BrowserRouter>
+      <Routes>
+
+        <Route path="/" element={
+          <>
+            <h2>Init page</h2>
+          </>
+        } />
+        
+        <Route path="/entrar" element={
+          <PublicRouteLogin>
+            <Login />
+          </PublicRouteLogin>
+        } />
+
+        <Route path="/dashboard" element={
+          <PrivateRoute activeSidebar={true}>
+            <Dashboard />
+          </PrivateRoute>
+        } />
+
+        <Route path="/produtos" element={
+          <PrivateRoute activeSidebar={true}>
+            <ProductPage>
+              <ProductsList/>
+            </ProductPage>
+          </PrivateRoute>
+        } />
+        <Route path="/produtos/new" element={
+          <PrivateRoute activeSidebar={true}>
+            <ProductPage>
+              <ProductCreate/>
+            </ProductPage>
+          </PrivateRoute>
+        } />
+
+        <Route path="*" element={<NotFound />} />
+
+      </Routes>
+    </BrowserRouter>
+  );
+}
