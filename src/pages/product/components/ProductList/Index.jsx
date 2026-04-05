@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Api from "../../../../services/Api";
 import ProdutoCard from "./ProductCard";
 import SearchIcon from "../../../../components/svg/SearchIcon";
+import { useNavigate } from "react-router-dom";
 
 const Skeleton = () => (
   <div className="animate-pulse flex flex-col gap-2">
@@ -26,7 +27,7 @@ const ProductsList = ({ onEditar, onDeletar }) => {
   const [loading, setLoading] = useState(true);
   const [busca, setBusca] = useState("");
   const [saindo, setSaindo] = useState(null);
-
+  const navigate = useNavigate();
   
   useEffect(() => {
     const carregar = async () => {
@@ -96,7 +97,9 @@ const ProductsList = ({ onEditar, onDeletar }) => {
             <ProdutoCard
               key={p.uuid}
               produto={p}
-              onEditar={onEditar ?? (() => {})}
+              onEditar={onEditar ?? (() => {
+                navigate(`/produtos/edit/${p.uuid}`);
+              })}
               onDeletar={handleDeletar}
               saindo={saindo === p.uuid}
             />

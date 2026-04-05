@@ -56,13 +56,12 @@ export default function Dashboard() {
       try {
         const data = await getProducts();
         setProducts(data);   
-        console.log("produtos totais:",data);
       } catch (error) {
         console.error('Erro ao buscar produtos:', error);
       }
     };
 
-    loadData();
+    // loadData();
   }, []);
 
   return (

@@ -9,6 +9,7 @@ import Dashboard from "../pages/dashboard/Index";
 import ProductPage from "../pages/product/Index";
 import ProductsList from "../pages/product/components/ProductList/Index";
 import ProductCreate from "../pages/product/components/ProductCreate/Index";
+import ProductEdit from "../pages/product/components/ProductEdit/Index";
 
 export default function AppRoutes() {
   return (
@@ -40,6 +41,7 @@ export default function AppRoutes() {
             </ProductPage>
           </PrivateRoute>
         } />
+
         <Route path="/produtos/new" element={
           <PrivateRoute activeSidebar={true}>
             <ProductPage>
@@ -51,6 +53,21 @@ export default function AppRoutes() {
             </ProductPage>
           </PrivateRoute>
         } />
+
+         <Route path="/produtos/edit/:uuid" element={
+          <PrivateRoute activeSidebar={true}>
+            <ProductPage>
+              <ProductEdit onVoltar = {
+                () => {
+                  window.history.back();
+                }
+              }/>
+            </ProductPage>
+          </PrivateRoute>
+        } />
+
+
+
 
         <Route path="*" element={<NotFound />} />
 
