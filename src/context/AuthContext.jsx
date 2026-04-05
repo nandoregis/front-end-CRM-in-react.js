@@ -18,27 +18,14 @@ export function AuthProvider({ children }) {
     // FAZER REQUISIÇÃO PARA VERIFICAR SE TOKEN É VALIDO.
 
     if (storedToken) {
-
-      if(!expiredToken)
-      {
-        axios.put(`${CONFIG.API.BASE_URL}/v1/auth/me/${storedToken}`)
-        .then( data => {
-            const userdata = data.data.data;
-            const date = new Date(userdata.expired_date * 1000);
-            localStorage.setItem('expired_token', date.toLocaleString());
-        }).catch(err => {
-            logout();
-        })
-      }
-      
       if(expiredToken) {
         if( new Date().toLocaleString() > expiredToken ) { 
           // token expirado...
+          console.log('token expirado bora remover né')
           localStorage.removeItem('expired_token');
           logout();
         }
       }
-      
     }
     
     setLoading(false);
