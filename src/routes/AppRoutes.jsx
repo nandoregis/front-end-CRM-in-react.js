@@ -43,7 +43,11 @@ export default function AppRoutes() {
         <Route path="/produtos/new" element={
           <PrivateRoute activeSidebar={true}>
             <ProductPage>
-              <ProductCreate/>
+              <ProductCreate onVoltar = {
+                () => {
+                  window.history.back();
+                }
+              }/>
             </ProductPage>
           </PrivateRoute>
         } />
