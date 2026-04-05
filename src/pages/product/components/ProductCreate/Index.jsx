@@ -3,22 +3,7 @@ import Api from "../../../../services/Api";
 import PlusIcon from "../../../../components/svg/PlusIcon";
 import TrashIcon from "../../../../components/svg/TrashIcon";
 import BackIcon from "../../../../components/svg/BackIcon";
-
-
-const MOCK_CORES = [
-  { uuid: "7ce82d06-5b5c-4e90-94a7-4a569013033c", name: "Branco", hex: "#FFFFFF" },
-  { uuid: "a1b2c3d4-0000-0000-0000-000000000001", name: "Preto",  hex: "#1a1a1a" },
-  { uuid: "a1b2c3d4-0000-0000-0000-000000000002", name: "Azul",   hex: "#1e3a5f" },
-  { uuid: "a1b2c3d4-0000-0000-0000-000000000003", name: "Vermelho", hex: "#c0392b" },
-];
-
-const MOCK_TAMANHOS = [
-  { uuid: "43103e8d-74d7-4d9e-84e9-d2a41c38d876", name: "PP" },
-  { uuid: "43103e8d-74d7-4d9e-84e9-d2a41c38d877", name: "P"  },
-  { uuid: "41eb0dec-256b-4e29-8bab-5ba40484c364", name: "M"  },
-  { uuid: "d5a67549-ba2b-42a7-9198-a51ef0d285d6", name: "G"  },
-  { uuid: "285b786c-a5cf-4603-96a0-ed5494e4055c", name: "GG" },
-];
+import { useToast } from "../../../../context/ToastContext";
 
 const varianteVazia = () => ({
   _id: Date.now() + Math.random(),
@@ -29,17 +14,20 @@ const varianteVazia = () => ({
 });
 
 const ProductCreate = ({ onVoltar }) => {
-  const [cores, setCores] = useState([]);
-  const [tamanhos, setTamanhos] = useState([]);
-  const [loadingOpcoes, setLoadingOpcoes] = useState(true);
-  const [salvando, setSalvando] = useState(false);
-  const [erro, setErro] = useState(null);
 
-  const [form, setForm] = useState({
-    name: "",
-    reference: "",
-    variations: [varianteVazia()],
-  });
+    const { addToast } = useToast();
+
+    const [cores, setCores] = useState([]);
+    const [tamanhos, setTamanhos] = useState([]);
+    const [loadingOpcoes, setLoadingOpcoes] = useState(true);
+    const [salvando, setSalvando] = useState(false);
+    const [erro, setErro] = useState(null);
+
+    const [form, setForm] = useState({
+        name: "",
+        reference: "",
+        variations: [varianteVazia()],
+    });
 
   useEffect(() => {
     const carregar = async () => {
@@ -51,11 +39,26 @@ const ProductCreate = ({ onVoltar }) => {
 
         setCores(resCores.data.data);
         setTamanhos(resTamanhos.data.data);
-      } catch {
+       
+      } catch (err){
+
+        const codeError = err.response.data.code;
+        const attempt_in = err.response.data.attempt_in;
+
+        if(codeError === 429) {
+            setLoadingOpcoes(true);
+            addToast('warning', "Muitas requisições. Tente novamente em " + attempt_in + " segundos.");
+            setTimeout(() => {
+                carregar();
+                setLoadingOpcoes(false)
+            }, attempt_in * 1000);
+        }
+       
         setCores([]);
         setTamanhos([]);
+        
       } finally {
-        setLoadingOpcoes(false);
+       setLoadingOpcoes(false)
       }
     };
     carregar();
@@ -103,19 +106,31 @@ const ProductCreate = ({ onVoltar }) => {
       variations: form.variations.map(({ color_uuid, size_uuid, price }) => ({
         color_uuid,
         size_uuid,
-        price: price || "0.00"
+        price: parseFloat(price).toFixed(2).replace(".", ",")  || "0,00"
       })),
     };
 
     console.log(payload);
-    // try {
-    //   await Api.post("/v1/products/create", payload);
-    //   onVoltar?.();
-    // } catch (err) {
-    //   setErro("Erro ao salvar produto. Verifique os dados e tente novamente.");
-    // } finally {
-    //   setSalvando(false);
-    // }
+
+    try {
+      await Api.post("/v1/produtos/c/create", payload);
+      addToast('success', 'Produto cadastrado com sucesso!');
+      onVoltar?.();
+    } catch (err) {
+        console.log(err.response)
+        const errorMessage = err.response.data.message;
+        var message = "";
+
+        if(typeof errorMessage != 'string') {
+            for (const key in errorMessage) {
+                message = errorMessage[key];
+            }
+        }
+        addToast('error', message);
+    } finally {
+      setSalvando(false);
+    }
+
   };
 
   return (
@@ -149,7 +164,7 @@ const ProductCreate = ({ onVoltar }) => {
               <input
                 type="text"
                 name="name"
-                value={form.name}
+                value={form?.name}
                 onChange={handleForm}
                 placeholder="Ex: Camisa Algodão"
                 required
@@ -163,7 +178,7 @@ const ProductCreate = ({ onVoltar }) => {
               <input
                 type="text"
                 name="reference"
-                value={form.reference}
+                value={form?.reference}
                 onChange={handleForm}
                 placeholder="Ex: 01092"
                 required
@@ -192,7 +207,7 @@ const ProductCreate = ({ onVoltar }) => {
 
           {/* Linhas */}
           <div className="flex flex-col gap-2">
-            {form.variations.map((v) => (
+            {form?.variations?.map((v) => (
               <div key={v._id} className="grid grid-cols-[1fr_1fr_100px_130px_32px] gap-2 items-center">
 
                 {/* Cor */}
@@ -205,7 +220,7 @@ const ProductCreate = ({ onVoltar }) => {
                     outline-none focus:border-blue-400 transition-colors bg-white"
                 >
                   <option value="">Selecione</option>
-                  {cores.map((c) => (
+                  {cores?.map((c) => (
                     <option key={c.uuid} value={c.uuid}>{c.name}</option>
                   ))}
                 </select>
@@ -220,7 +235,7 @@ const ProductCreate = ({ onVoltar }) => {
                     outline-none focus:border-blue-400 transition-colors bg-white"
                 >
                   <option value="">Selecione</option>
-                  {tamanhos.map((t) => (
+                  {tamanhos?.map((t) => (
                     <option key={t.uuid} value={t.uuid}>{t.name}</option>
                   ))}
                 </select>
