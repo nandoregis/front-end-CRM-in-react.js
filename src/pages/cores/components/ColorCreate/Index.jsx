@@ -1,5 +1,6 @@
 import { useState } from "react";
-import Api from "../services/Api";
+import Api from "../../../../services/Api";
+import { useToast } from "../../../../context/ToastContext";
 
 const BackIcon = () => (
   <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -11,8 +12,8 @@ const BackIcon = () => (
 const ColorCreate = ({ onVoltar }) => {
   const [form, setForm] = useState({ name: "", hex: "#000000" });
   const [salvando, setSalvando] = useState(false);
-  const [erro, setErro] = useState(null);
   const [sucesso, setSucesso] = useState(false);
+  const {addToast} = useToast();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,19 +22,26 @@ const ColorCreate = ({ onVoltar }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErro(null);
     setSucesso(false);
     setSalvando(true);
 
     try {
-      await Api.post("/v1/colors", {
+      await Api.post("/v1/colors/c/create", {
         name: form.name,
-        hex: form.hex,
+        color_hex: form.hex,
       });
-      setSucesso(true);
-      setTimeout(() => onVoltar?.(), 1000);
-    } catch {
-      setErro("Erro ao salvar cor. Tente novamente.");
+
+        addToast('success','Cor cadastrada com sucesso!');
+        setTimeout(() => onVoltar?.(), 1000);
+    } catch (error) {
+        const errorMessage = error.response.data.message;
+        var message = errorMessage;
+        if(typeof errorMessage != 'string') {
+            for(const key in errorMessage) {
+                message = errorMessage[key];
+            }
+        }
+        addToast('error', message);
     } finally {
       setSalvando(false);
     }
@@ -119,20 +127,6 @@ const ColorCreate = ({ onVoltar }) => {
           </div>
 
         </div>
-
-        {/* Erro */}
-        {erro && (
-          <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-4 py-3">
-            {erro}
-          </p>
-        )}
-
-        {/* Sucesso */}
-        {sucesso && (
-          <p className="text-sm text-green-700 bg-green-50 border border-green-100 rounded-lg px-4 py-3">
-            Cor cadastrada com sucesso! Redirecionando...
-          </p>
-        )}
 
         {/* Ações */}
         <div className="flex items-center justify-end gap-3">
