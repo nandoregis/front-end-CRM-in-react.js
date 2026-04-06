@@ -62,9 +62,24 @@ const ProductEdit = ({ onVoltar }) => {
                 });
                 setSucesso(true);
                 addToast('success', 'Atualizado com sucesso!');
+                setTimeout(() => {
+                    setSucesso(false);
+                    setSalvando(false);
+                }, 3000);
             } catch (err) {
-                const errorMessage = typeof err.response.data.message == 'string' ? err.response.data.message : 'Houve um erro e não conseguiu atualizar';
-                addToast('error', errorMessage);
+
+                const errorMessage = err.response.data.message;
+                var message = 'Houve um erro e não foi possivel a alteração';
+                
+                if(typeof errorMessage != 'string'){
+                    // errorMessage is Object
+                    for (const key in errorMessage) {
+                        message = errorMessage[key];
+                    }
+                }
+
+                addToast('error', message);
+
             } finally {
                 setSalvando(false);
             }
