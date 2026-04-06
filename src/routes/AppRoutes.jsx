@@ -10,6 +10,8 @@ import ProductPage from "../pages/product/Index";
 import ProductsList from "../pages/product/components/ProductList/Index";
 import ProductCreate from "../pages/product/components/ProductCreate/Index";
 import ProductEdit from "../pages/product/components/ProductEdit/Index";
+import ColorPage from "../pages/cores/Index";
+import ColorList from "../pages/cores/components/ColorList/Index";
 
 export default function AppRoutes() {
   return (
@@ -66,7 +68,13 @@ export default function AppRoutes() {
           </PrivateRoute>
         } />
 
-
+        <Route path="/cores" element={
+          <PrivateRoute activeSidebar={true}>
+            <ColorPage>
+              <ColorList/>
+            </ColorPage>
+          </PrivateRoute>
+        } />
 
 
         <Route path="*" element={<NotFound />} />
