@@ -28,7 +28,7 @@ const ProductsList = ({ onEditar, onDeletar }) => {
   const [busca, setBusca] = useState("");
   const [saindo, setSaindo] = useState(null);
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     const carregar = async () => {
         try {
@@ -45,7 +45,7 @@ const ProductsList = ({ onEditar, onDeletar }) => {
         
   }, []);
   
-
+  /** inativo temporiamente.*/
   const handleDeletar = async (uuid) => {
     if (!confirm("Deseja remover este produto ?")) return;
     setSaindo(uuid);
@@ -100,7 +100,9 @@ const ProductsList = ({ onEditar, onDeletar }) => {
               onEditar={onEditar ?? (() => {
                 navigate(`/produtos/edit/${p.uuid}`);
               })}
-              onDeletar={handleDeletar}
+              onDeletar={ () => {
+                alert('Em desenvolvimento...')
+              }}
               saindo={saindo === p.uuid}
             />
           ))}

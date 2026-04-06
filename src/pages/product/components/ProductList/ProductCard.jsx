@@ -1,6 +1,5 @@
+import DollarIcon from "../../../../components/svg/DollarIcon";
 import EditIcon from "../../../../components/svg/EditIcon";
-import TrashIcon from "../../../../components/svg/TrashIcon";
-
 
 const precoDisplay = (variations) => {
   const precos = variations.map((v) => parseFloat(v.price)).filter((p) => p > 0);
@@ -78,9 +77,9 @@ const ProdutoCard = ({ produto, onEditar, onDeletar, saindo }) => {
           onClick={() => onDeletar(produto.uuid)}
           title="Deletar"
           className="cursor-pointer w-8 h-8 flex items-center justify-center rounded-lg text-gray-400
-            hover:text-red-500 hover:bg-red-50 transition-colors duration-150"
+            hover:text-green-500 hover:bg-green-50 transition-colors duration-150"
         >
-          <TrashIcon />
+          <DollarIcon/>
         </button>
       </div>
     </div>
