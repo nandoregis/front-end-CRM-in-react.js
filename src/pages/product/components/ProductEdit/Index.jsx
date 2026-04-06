@@ -69,7 +69,7 @@ const ProductEdit = ({ onVoltar }) => {
             } catch (err) {
 
                 const errorMessage = err.response.data.message;
-                var message = 'Houve um erro e não foi possivel a alteração';
+                var message = 'Houve um erro e não foi possivel à alteração';
                 
                 if(typeof errorMessage != 'string'){
                     // errorMessage is Object
