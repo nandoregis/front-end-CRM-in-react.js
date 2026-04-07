@@ -27,7 +27,7 @@ const ColorCard = ({ cor, onEditar, onDeletar, saindo }) => (
       <button
         onClick={() => onEditar(cor)}
         title="Editar"
-        className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400
+        className="cursor-pointer w-8 h-8 flex items-center justify-center rounded-lg text-gray-400
           hover:text-blue-600 hover:bg-blue-50 transition-colors duration-150"
       >
         <EditIcon />
@@ -35,7 +35,7 @@ const ColorCard = ({ cor, onEditar, onDeletar, saindo }) => (
       <button
         onClick={() => onDeletar(cor.uuid)}
         title="Deletar"
-        className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400
+        className="cursor-pointer w-8 h-8 flex items-center justify-center rounded-lg text-gray-400
           hover:text-red-500 hover:bg-red-50 transition-colors duration-150"
       >
         <TrashIcon />
