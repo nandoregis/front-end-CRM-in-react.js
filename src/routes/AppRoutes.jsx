@@ -13,6 +13,7 @@ import ProductEdit from "../pages/product/components/ProductEdit/Index";
 import ColorPage from "../pages/cores/Index";
 import ColorList from "../pages/cores/components/ColorList/Index";
 import ColorCreate from "../pages/cores/components/ColorCreate/Index";
+import ColorEdit from "../pages/cores/components/ColorEdit/Index";
 
 export default function AppRoutes() {
   return (
@@ -81,6 +82,14 @@ export default function AppRoutes() {
           <PrivateRoute activeSidebar={true}>
             <ColorPage>
               <ColorCreate onVoltar={() => { window.history.back() }}/>
+            </ColorPage>
+          </PrivateRoute>
+        } />
+
+        <Route path="/cores/edit/:uuid" element={
+          <PrivateRoute activeSidebar={true}>
+            <ColorPage>
+              <ColorEdit onVoltar={() => { window.history.back() }}/>
             </ColorPage>
           </PrivateRoute>
         } />

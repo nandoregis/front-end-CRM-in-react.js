@@ -32,7 +32,7 @@ const ColorPage = ({children}) =>  {
                         font-medium
                     ">
                         <PlusIcon/>
-                        <span>Criar cor</span>
+                        <span>Criar Cor</span>
                     </button>
                 </div>
 

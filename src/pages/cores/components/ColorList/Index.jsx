@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Api from "../../../../services/Api";
 import SearchIcon from "../../../../components/svg/SearchIcon";
 import ColorCard from "./components/ColorCard";
+import { useNavigate } from "react-router-dom";
 
 const Skeleton = () => (
   <div className="animate-pulse flex flex-col gap-2">
@@ -26,6 +27,7 @@ const ColorList = ({ onEditar, onDeletar }) => {
   const [loading, setLoading] = useState(true);
   const [busca, setBusca] = useState("");
   const [saindo, setSaindo] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const carregar = async () => {
@@ -86,7 +88,9 @@ const ColorList = ({ onEditar, onDeletar }) => {
             <ColorCard
               key={c.uuid}
               cor={c}
-              onEditar={onEditar ?? (() => {})}
+              onEditar={(() => {
+                navigate(`/cores/edit/${c.uuid}`);
+              })}
               onDeletar={handleDeletar}
               saindo={saindo === c.uuid}
             />
