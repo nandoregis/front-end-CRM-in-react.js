@@ -14,6 +14,8 @@ import ColorPage from "../pages/cores/Index";
 import ColorList from "../pages/cores/components/ColorList/Index";
 import ColorCreate from "../pages/cores/components/ColorCreate/Index";
 import ColorEdit from "../pages/cores/components/ColorEdit/Index";
+import SizePage from "../pages/sizes/Index";
+import SizeList from "../pages/sizes/components/SizeList/Index";
 
 export default function AppRoutes() {
   return (
@@ -94,6 +96,13 @@ export default function AppRoutes() {
           </PrivateRoute>
         } />
 
+         <Route path="/tamanhos" element={
+          <PrivateRoute activeSidebar={true}>
+            <SizePage>
+              <SizeList/>
+            </SizePage>
+          </PrivateRoute>
+        } />
 
         <Route path="*" element={<NotFound />} />
 
