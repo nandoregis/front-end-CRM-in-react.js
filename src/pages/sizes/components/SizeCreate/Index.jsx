@@ -1,12 +1,14 @@
 import { useState } from "react";
-import Api from "../services/Api";
+import Api from "../../../../services/Api";
 import BackIcon from "../../../../components/svg/BackIcon";
+import { useToast } from "../../../../context/ToastContext";
 
 const SizeCreate = ({ onVoltar }) => {
   const [name, setName] = useState("");
   const [salvando, setSalvando] = useState(false);
   const [erro, setErro] = useState(null);
   const [sucesso, setSucesso] = useState(false);
+  const {addToast} = useToast();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,11 +17,19 @@ const SizeCreate = ({ onVoltar }) => {
     setSalvando(true);
 
     try {
-      await Api.post("/v1/sizes", { name });
+      await Api.post("/v1/sizes/c/create", { name });
       setSucesso(true);
-      setTimeout(() => onVoltar?.(), 1000);
+      addToast('success',"Tamanho salvo com sucesso!")
+      setTimeout(() => onVoltar?.(), 3000);
     } catch {
-      setErro("Erro ao salvar tamanho. Tente novamente.");
+      const errorMessage = error.response.data.message;
+        var message = errorMessage;
+        if(typeof errorMessage != 'string') {
+            for(const key in errorMessage) {
+                message = errorMessage[key];
+            }
+        }
+        addToast('error', message);
     } finally {
       setSalvando(false);
     }
@@ -33,7 +43,7 @@ const SizeCreate = ({ onVoltar }) => {
         <button
           type="button"
           onClick={onVoltar}
-          className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400
+          className="cursor-pointer w-8 h-8 flex items-center justify-center rounded-lg text-gray-400
             hover:text-gray-700 hover:bg-gray-100 transition-colors"
         >
           <BackIcon />

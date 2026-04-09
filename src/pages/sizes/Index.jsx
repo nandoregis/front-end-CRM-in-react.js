@@ -16,7 +16,7 @@ const SizePage = ({children}) =>  {
                 <div>
                     <button 
                         onClick={() => {
-                            navigate("/cores/new");
+                            navigate("/tamanhos/new");
                         }}
                         type="button" 
                         className="

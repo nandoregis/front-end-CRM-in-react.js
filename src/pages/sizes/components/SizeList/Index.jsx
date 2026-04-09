@@ -3,16 +3,6 @@ import Api from "../../../../services/Api";
 import SearchIcon from "../../../../components/svg/SearchIcon";
 import SizeCard from "./components/SizeCard";
 
-
-const MOCK = [
-  { uuid: "1", name: "PP" },
-  { uuid: "2", name: "P"  },
-  { uuid: "3", name: "M"  },
-  { uuid: "4", name: "G"  },
-  { uuid: "5", name: "GG" },
-];
-
-
 const Skeleton = () => (
   <div className="animate-pulse flex flex-col gap-2">
     {Array.from({ length: 5 }).map((_, i) => (
@@ -40,7 +30,7 @@ const SizeList = () => {
         const res = await Api.get("/v1/sizes");
         setTamanhos(res.data.data);
       } catch {
-        setTamanhos(MOCK);
+        setTamanhos([]);
       } finally {
         setLoading(false);
       }
