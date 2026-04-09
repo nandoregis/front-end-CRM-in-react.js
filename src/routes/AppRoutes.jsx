@@ -17,6 +17,7 @@ import ColorEdit from "../pages/cores/components/ColorEdit/Index";
 import SizePage from "../pages/sizes/Index";
 import SizeList from "../pages/sizes/components/SizeList/Index";
 import SizeCreate from "../pages/sizes/components/SizeCreate/Index";
+import StockMovement from "../pages/storage/Index";
 
 export default function AppRoutes() {
   return (
@@ -113,9 +114,15 @@ export default function AppRoutes() {
           </PrivateRoute>
         } />
 
+          <Route path="/movimentacao" element={
+          <PrivateRoute activeSidebar={true}>
+            <StockMovement/>
+          </PrivateRoute>
+        } />
+
         <Route path="*" element={<NotFound />} />
 
       </Routes>
     </BrowserRouter>
   );
-}
+} 
