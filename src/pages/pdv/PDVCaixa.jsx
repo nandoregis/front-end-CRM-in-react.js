@@ -7,7 +7,6 @@ const PDVCaixa = () => {
 
   const {uuid} = useParams();
 
-
   //------------- states ------------------
   const [sale, setSale] = useState([]);
   const [openSale, setOpenSale] = useState(false);
@@ -31,7 +30,7 @@ const PDVCaixa = () => {
         setSale(data?.data?.data);
       } catch (err) {
         setOpenSale(false);
-        navigate("/pdv");
+        // navigate("/pdv");
       } 
     }
     
