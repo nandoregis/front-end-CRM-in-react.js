@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Icon = ({ d, size = 16 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
@@ -38,7 +38,7 @@ const nav = [
       { id: "movimentacao", label: "Movimentação", icon: "movimentacao", route:"/movimentacao" },
     ],
   },
-  { id: "pdv", label: "PDV", icon: "pdv" },
+  { id: "pdv", label: "PDV", icon: "pdv", route:"/pdv" },
 ];
 
 export default function Sidebar({ active, setActive }) {

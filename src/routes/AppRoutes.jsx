@@ -18,6 +18,8 @@ import SizePage from "../pages/sizes/Index";
 import SizeList from "../pages/sizes/components/SizeList/Index";
 import SizeCreate from "../pages/sizes/components/SizeCreate/Index";
 import StockMovement from "../pages/storage/Index";
+import PDV from "../pages/pdv/Index";
+import PDVCaixa from "../pages/pdv/PDVCaixa";
 
 export default function AppRoutes() {
   return (
@@ -114,11 +116,24 @@ export default function AppRoutes() {
           </PrivateRoute>
         } />
 
-          <Route path="/movimentacao" element={
+        <Route path="/movimentacao" element={
           <PrivateRoute activeSidebar={true}>
             <StockMovement/>
           </PrivateRoute>
         } />
+
+        <Route path="/pdv" element={
+          <PrivateRoute activeSidebar={true}>
+            <PDV/>
+          </PrivateRoute>
+        } />
+
+        <Route path="/pdv/:uuid" element={
+          <PrivateRoute activeSidebar={true}>
+            <PDVCaixa/>
+          </PrivateRoute>
+        } />
+
 
         <Route path="*" element={<NotFound />} />
 
