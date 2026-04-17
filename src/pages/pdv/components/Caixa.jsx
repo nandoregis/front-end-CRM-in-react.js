@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Api from "../../../services/Api";
 import Cart from "./Cart";
 import Payment from "./Payment";
@@ -38,7 +38,6 @@ const Caixa = ({ sale }) => {
 
   const addProdutoNoDB = async (produto, variante, quantidade) => {
    
-    console.log(produto,variante,quantidade)
     try {
       const res = await Api.post('/v1/sales/itens/c/create', {
         sale_uuid: sale.uuid,
@@ -57,6 +56,52 @@ const Caixa = ({ sale }) => {
     }
   }
 
+   useEffect(() => {
+    const loadItemsSale = async () => 
+    { 
+      
+      try {
+        const res = await Api.get(`/v1/sales/items/${sale.uuid}`);
+        const items = res.data.data;
+        console.log(items);
+
+        items.forEach( item => {
+
+            const chave = `${item.product_uuid}-${item.variation_uuid}`;
+
+            setCarrinho((prev) => {
+              const existe = prev.find((i) => i.chave === chave);
+              if (existe) {
+                return prev.map((i) =>
+                  i.chave === chave ? { ...i, quantidade: i.quantidade } : i
+                );
+              }
+
+              return [
+                ...prev,
+                {
+                  chave,
+                  produto_uuid:  item?.product_uuid,
+                  variante_uuid: item?.variation_uuid,
+                  nome:    item?.product_name,
+                  cor:     item?.color_name,
+                  cor_hex: item?.color_hex,
+                  tamanho: item?.size_name,
+                  preco:   item?.price || "0.00",
+                  quantidade: item?.quantity
+                },
+              ];
+            }); 
+        });
+    
+      } catch (err) {
+        console.log(err.response);
+      }
+    }
+
+    loadItemsSale();
+  }, []);
+
   // ─── adicionar ao carrinho ────────────────────────────────────────────────
   const adicionarAoCarrinho = () => {
     if (!produto || !varianteUuid) return;
@@ -64,16 +109,18 @@ const Caixa = ({ sale }) => {
     if (!variante) return;
 
     const chave = `${produto.uuid}-${varianteUuid}`;
-
-    addProdutoNoDB(produto, variante, quantidade);
+    var quantity = quantidade;
 
     setCarrinho((prev) => {
       const existe = prev.find((i) => i.chave === chave);
+      console.log(existe);
       if (existe) {
+        quantity = Number(existe.quantidade) + quantidade;
         return prev.map((i) =>
-          i.chave === chave ? { ...i, quantidade: i.quantidade + quantidade } : i
+          i.chave === chave ? { ...i, quantidade: Number(i.quantidade) + quantidade } : i
         );
       }
+
       return [
         ...prev,
         {
@@ -88,10 +135,14 @@ const Caixa = ({ sale }) => {
           quantidade,
         },
       ];
-    });
+    }); 
+
+    addProdutoNoDB(produto, variante, quantity);
 
     limparStates();
   };
+
+ 
 
   // ─── alterar quantidade ───────────────────────────────────────────────────
   const alterarQtd = (chave, val) => {
@@ -130,8 +181,34 @@ const Caixa = ({ sale }) => {
   }
 
   // ─── remover item ─────────────────────────────────────────────────────────
-  const removerItem = (chave) =>
-    setCarrinho((p) => p.filter((i) => i.chave !== chave));
+
+  const removerItem = async (chave) => {
+    const produtoRemove = carrinho.find((i) => i.chave === chave);
+    if (!produtoRemove) return;
+
+    console.log(produtoRemove)
+
+    try {
+      const res = await Api.delete(`/v1/sales/itens/d/delete/${produtoRemove.variante_uuid}`);
+      console.log(res.data.data);
+      setCarrinho((p) => p.filter((i) => i.chave !== chave));
+    } catch (err) {
+      const errorMessage = err.response?.data?.message;
+      console.log(errorMessage);
+    }    
+  }
+
+  const removerTodosItens = async () => {
+    try {
+      const res = await Api.delete(`/v1/sales/itens/all/d/delete/sale/${sale.uuid}`);
+      setCarrinho([]);
+    } catch (err) {
+      const errorMessage = err.response?.data?.message;
+      console.log(errorMessage);
+    }   
+  }
+
+  //  /itens/all/d/delete/sale/ 
 
   // ─── finalizar venda ──────────────────────────────────────────────────────
   const finalizarVenda = async () => {
@@ -202,10 +279,9 @@ const Caixa = ({ sale }) => {
           descontoVal={descontoVal}
           total={total}
           onFinalizar={finalizarVenda}
-          onLimpar={() => setCarrinho([])}
+          onLimpar={removerTodosItens}
           finalizando={finalizando}
           sucesso={sucesso}
-          erro={erro}
           temItens={carrinho.length > 0}
         />
       </div>

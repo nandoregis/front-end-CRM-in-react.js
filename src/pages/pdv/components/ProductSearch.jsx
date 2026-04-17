@@ -1,13 +1,7 @@
 import { useEffect, useRef } from "react";
 import Api from "../../../services/Api";
 import SearchIcon from "../../../components/svg/SearchIcon";
-
-const CloseIcon = () => (
-  <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="currentColor"
-    strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-    <path d="M18 6L6 18M6 6l12 12" />
-  </svg>
-);
+import CloseIcon from "../../../components/svg/CloseIcon";
 
 const fmt = (val) =>
   Number(val).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });

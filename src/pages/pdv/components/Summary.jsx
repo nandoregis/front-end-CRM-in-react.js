@@ -1,7 +1,7 @@
 const fmt = (val) =>
   Number(val).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
-const Summary = ({ subtotal, descontoVal, total, onFinalizar, finalizando, sucesso, erro, onLimpar, temItens }) => (
+const Summary = ({ subtotal, descontoVal, total, onFinalizar, finalizando, sucesso, onLimpar, temItens }) => (
   <div className="flex flex-col gap-3">
 
     <div className="bg-white border border-gray-100 rounded-xl p-5 flex flex-col gap-3">
@@ -25,21 +25,9 @@ const Summary = ({ subtotal, descontoVal, total, onFinalizar, finalizando, suces
       </div>
     </div>
 
-    {erro && (
-      <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-4 py-3">
-        {erro}
-      </p>
-    )}
-
-    {sucesso && (
-      <p className="text-sm text-green-700 bg-green-50 border border-green-100 rounded-lg px-4 py-3">
-        Venda finalizada com sucesso!
-      </p>
-    )}
-
     <button type="button" onClick={onFinalizar}
       disabled={!temItens || finalizando || sucesso}
-      className="w-full py-3.5 rounded-xl bg-gray-900 text-white text-sm font-medium
+      className="cursor-pointer w-full py-3.5 rounded-xl bg-gray-900 text-white text-sm font-medium
         hover:bg-gray-700 active:scale-95 transition-all duration-150
         disabled:opacity-40 disabled:cursor-not-allowed">
       {finalizando ? "Finalizando..." : "Finalizar venda"}
@@ -47,7 +35,7 @@ const Summary = ({ subtotal, descontoVal, total, onFinalizar, finalizando, suces
 
     {temItens && (
       <button type="button" onClick={onLimpar}
-        className="w-full py-2.5 rounded-xl border border-gray-200 text-sm text-gray-500
+        className="cursor-pointer w-full py-2.5 rounded-xl border border-gray-200 text-sm text-gray-500
           hover:bg-gray-50 transition-colors">
         Limpar carrinho
       </button>
