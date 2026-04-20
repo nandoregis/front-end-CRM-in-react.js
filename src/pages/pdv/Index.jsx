@@ -62,10 +62,11 @@ const PDV = ({ onCriada }) => {
         <>
 
           <div className="min-h-screen w-full bg-gray-50 font-sans flex flex-col p-5">
+            <h1 className="text-base font-medium text-gray-900 mb-3">Venda em aberto</h1>
             {sales.map((venda) => (
               <div
                 key={venda.uuid}
-                className="bg-white rounded-xl p-4 shadow border border-gray-100 cursor-pointer hover:shadow-md transition"
+                className="bg-white rounded-xl p-4 shadow border border-gray-100 cursor-pointer hover:shadow-md transition mb-4"
                 onClick={() => {
                   navigate(`/pdv/${venda.uuid}`);
                 }}
@@ -85,14 +86,25 @@ const PDV = ({ onCriada }) => {
                 <p className="text-xs text-gray-500 mb-2">
                   Pagamento: {venda.payment}
                 </p>
-
-            
               </div>
             ))}
+
+            <button
+              type="button"
+              onClick={criarVenda}
+              disabled={salvando}
+              className="cursor-pointer w-full py-3 rounded-xl bg-gray-900 text-white text-sm font-medium
+                hover:bg-gray-700 active:scale-95 transition-all duration-150
+                disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              {salvando ? "Criando venda..." : "Iniciar nova venda"}
+            </button>
+
           </div>
-
-
+          
+        
         </>
+        
       )}
       {!saleOpen && (
         <div className="min-h-screen w-full bg-gray-50 font-sans flex items-center justify-center p-5">
