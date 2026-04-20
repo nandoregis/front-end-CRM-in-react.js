@@ -21,7 +21,7 @@ const Cart = ({ carrinho, alterarQtd, removerItem }) => (
           <div key={item.chave} className="flex items-center gap-3 px-5 py-3">
 
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-900 truncate">{item.nome}</p>
+              <p className="text-sm font-medium text-gray-900 truncate">{item.referencia} - {item.nome}</p>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <span className="inline-block w-2.5 h-2.5 rounded-full border border-gray-300 flex-shrink-0"
                   style={{ background: item.cor_hex }} />
@@ -32,14 +32,14 @@ const Cart = ({ carrinho, alterarQtd, removerItem }) => (
             </div>
 
             <div className="flex items-center gap-1 flex-shrink-0">
-              <button onClick={() => alterarQtd(item.chave, item.quantidade - 1)}
-                className="w-7 h-7 flex items-center justify-center rounded-lg border border-gray-200
+              <button onClick={() => alterarQtd(item.chave, parseInt(item.quantidade) - 1)}
+                className="cursor-pointer w-7 h-7 flex items-center justify-center rounded-lg border border-gray-200
                   text-gray-500 hover:bg-gray-50 transition-colors">−</button>
               <span className="w-8 text-center text-sm font-medium text-gray-900">
                 {item.quantidade}
               </span>
-              <button onClick={() => alterarQtd(item.chave, item.quantidade + 1)}
-                className="w-7 h-7 flex items-center justify-center rounded-lg border border-gray-200
+              <button onClick={() => alterarQtd(item.chave, parseInt(item.quantidade) + 1)}
+                className="cursor-pointer w-7 h-7 flex items-center justify-center rounded-lg border border-gray-200
                   text-gray-500 hover:bg-gray-50 transition-colors">+</button>
             </div>
 
@@ -48,7 +48,7 @@ const Cart = ({ carrinho, alterarQtd, removerItem }) => (
             </span>
 
             <button onClick={() => removerItem(item.chave)}
-              className="w-7 h-7 flex items-center justify-center rounded-lg text-gray-400
+              className="cursor-pointer w-7 h-7 flex items-center justify-center rounded-lg text-gray-400
                 hover:text-red-500 hover:bg-red-50 transition-colors flex-shrink-0">
               <TrashIcon />
             </button>

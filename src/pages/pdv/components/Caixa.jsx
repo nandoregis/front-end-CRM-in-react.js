@@ -4,6 +4,8 @@ import Cart from "./Cart";
 import Payment from "./Payment";
 import Summary from "./Summary";
 import ProductSearch from "./ProductSearch";
+import { useToast } from "../../../context/ToastContext";
+import fmt from "./fmt";
 
 const Caixa = ({ sale }) => {
 
@@ -30,11 +32,13 @@ const Caixa = ({ sale }) => {
   const [finalizando, setFinalizando] = useState(false);
   const [erro, setErro]               = useState(null);
   const [sucesso, setSucesso]         = useState(false);
+  const {addToast} = useToast();
 
   // ─── totais ───────────────────────────────────────────────────────────────
   const subtotal    = carrinho.reduce((a, i) => a + i.preco * i.quantidade, 0);
-  const descontoVal = parseFloat(desconto) || 0;
+  const descontoVal =  parseFloat(desconto) || 0;
   const total       = Math.max(subtotal - descontoVal, 0);
+ 
 
   const addProdutoNoDB = async (produto, variante, quantidade) => {
    
@@ -63,7 +67,6 @@ const Caixa = ({ sale }) => {
       try {
         const res = await Api.get(`/v1/sales/items/${sale.uuid}`);
         const items = res.data.data;
-        console.log(items);
 
         items.forEach( item => {
 
@@ -82,6 +85,7 @@ const Caixa = ({ sale }) => {
                 {
                   chave,
                   produto_uuid:  item?.product_uuid,
+                  referencia : item?.product_reference,
                   variante_uuid: item?.variation_uuid,
                   nome:    item?.product_name,
                   cor:     item?.color_name,
@@ -95,7 +99,14 @@ const Caixa = ({ sale }) => {
         });
     
       } catch (err) {
-        console.log(err.response);
+        const errorMessage = err.response.data.message;
+        var message = errorMessage;
+        if(typeof errorMessage != 'string') {
+            for(const key in errorMessage) {
+                message = errorMessage[key];
+            }
+        }
+        addToast('error', message);
       }
     }
 
@@ -127,6 +138,7 @@ const Caixa = ({ sale }) => {
           chave,
           produto_uuid:  produto.uuid,
           variante_uuid: varianteUuid,
+          referencia : produto.reference,
           nome:    produto.name,
           cor:     variante.color_name,
           cor_hex: variante.color_hex,
@@ -186,15 +198,13 @@ const Caixa = ({ sale }) => {
     const produtoRemove = carrinho.find((i) => i.chave === chave);
     if (!produtoRemove) return;
 
-    console.log(produtoRemove)
-
     try {
       const res = await Api.delete(`/v1/sales/itens/d/delete/${produtoRemove.variante_uuid}`);
       console.log(res.data.data);
       setCarrinho((p) => p.filter((i) => i.chave !== chave));
     } catch (err) {
       const errorMessage = err.response?.data?.message;
-      console.log(errorMessage);
+      
     }    
   }
 
@@ -208,8 +218,6 @@ const Caixa = ({ sale }) => {
     }   
   }
 
-  //  /itens/all/d/delete/sale/ 
-
   // ─── finalizar venda ──────────────────────────────────────────────────────
   const finalizarVenda = async () => {
     if (!carrinho.length) return;
@@ -217,27 +225,29 @@ const Caixa = ({ sale }) => {
     setSucesso(false);
     setFinalizando(true);
 
-    const payload = {
-      payment_method: pagamento,
-      discount: descontoVal,
-      total,
-      items: carrinho.map((i) => ({
-        product_uuid:   i.produto_uuid,
-        variation_uuid: i.variante_uuid,
-        quantity: i.quantidade,
-        price:    i.preco,
-      })),
-    };
+    const formatDescontoVal = fmt(descontoVal).replace('R$','');
+
+    console.log(typeof formatDescontoVal);
 
     try {
-      await Api.post(`/v1/sales/${sale?.uuid}/finish`, payload);
+      await Api.put(`/v1/sales/finish/${sale?.uuid}`, {
+        payment : pagamento,
+        discount : formatDescontoVal.trim()
+      });
       setSucesso(true);
       setCarrinho([]);
       setDesconto("");
       setPagamento("dinheiro");
       setTimeout(() => setSucesso(false), 3000);
-    } catch {
-      setErro("Erro ao finalizar venda. Tente novamente.");
+    } catch (err) {
+      const errorMessage = err.response?.data?.message;
+      var message = errorMessage;
+      if(typeof errorMessage != 'string') {
+          for(const key in errorMessage) {
+              message = errorMessage[key];
+          }
+      }
+      addToast('error', message);
     } finally {
       setFinalizando(false);
     }

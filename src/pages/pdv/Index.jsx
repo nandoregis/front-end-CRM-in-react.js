@@ -44,20 +44,12 @@ const PDV = ({ onCriada }) => {
           </p>
         </div>
 
-        {/* Erro */}
-        {erro && (
-          <p className="w-full text-sm text-red-600 bg-red-50 border border-red-100
-            rounded-lg px-4 py-3 text-left">
-            {erro}
-          </p>
-        )}
-
         {/* Botão */}
         <button
           type="button"
           onClick={criarVenda}
           disabled={salvando}
-          className="w-full py-3 rounded-xl bg-gray-900 text-white text-sm font-medium
+          className="cursor-pointer w-full py-3 rounded-xl bg-gray-900 text-white text-sm font-medium
             hover:bg-gray-700 active:scale-95 transition-all duration-150
             disabled:opacity-60 disabled:cursor-not-allowed"
         >
