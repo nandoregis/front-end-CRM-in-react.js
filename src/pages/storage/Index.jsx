@@ -2,6 +2,8 @@ import { useState } from "react";
 import Api from "../../services/Api";
 import BackIcon from "../../components/svg/BackIcon";
 import SearchIcon from "../../components/svg/SearchIcon";
+import { useToast } from '../../context/ToastContext';
+import { FormatErrorMessage } from "../../components/FormatErrorMessage";
 
 const ROTAS = {
   entrada: "/v1/stock/in",
@@ -28,6 +30,8 @@ const StockMovement = ({ onVoltar }) => {
   const [erro, setErro] = useState(null);
   const [sucesso, setSucesso] = useState(false);
 
+  const {addToast} = useToast();
+
   const buscarProduto = async () => {
     if (!referencia.trim()) return;
     setErroBusca(null);
@@ -41,10 +45,19 @@ const StockMovement = ({ onVoltar }) => {
         ? res.data.data.find((p) => p.reference === referencia.trim())
         : res.data.data;
 
-      if (!encontrado) throw new Error("não encontrado");
+      if (!encontrado) {
+        throw {
+          response: {
+            status: 404,
+            data: { message: "Produto não encontrado" }
+          }
+        };
+      }
+
       setProduto(encontrado);
-    } catch {
-        setProduto([]);
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || '';
+      addToast('error', FormatErrorMessage(errorMessage));
     } finally {
       setBuscando(false);
     }
@@ -83,14 +96,15 @@ const StockMovement = ({ onVoltar }) => {
         limparProduto();
         setSucesso(false);
       }, 1500);
-    } catch {
-      setErro("Erro ao registrar movimentação. Tente novamente.");
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || '';
+      addToast('error', FormatErrorMessage(errorMessage));
     } finally {
       setSalvando(false);
     }
   };
 
-  const varianteSelecionada = produto?.variations.find((v) => v.uuid === variante_uuid);
+  const varianteSelecionada = produto ? produto?.variations.find((v) => v.uuid === variante_uuid) : null;
 
   return (
     <div className="min-h-screen w-full bg-gray-50 font-sans p-5">

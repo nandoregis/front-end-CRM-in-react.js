@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Api from "../../services/Api";
 import { useNavigate } from "react-router-dom";
+import { FormatErrorMessage } from "../../components/FormatErrorMessage";
 
 const PDV = ({ onCriada }) => {
   const [salvando, setSalvando] = useState(false);
@@ -17,7 +18,10 @@ const PDV = ({ onCriada }) => {
       onCriada?.(res.data.data ?? res.data);
       navigate(`/pdv/${sale.uuid}`);
     } catch {
-      setErro("Erro ao criar a venda. Tente novamente.");
+       const errorMessage = err.response?.data?.message;
+      var message = FormatErrorMessage(errorMessage);
+      
+      addToast('error', message);
     } finally {
       setSalvando(false);
     }

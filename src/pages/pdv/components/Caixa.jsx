@@ -204,6 +204,9 @@ const Caixa = ({ sale }) => {
       setCarrinho((p) => p.filter((i) => i.chave !== chave));
     } catch (err) {
       const errorMessage = err.response?.data?.message;
+      var message = FormatErrorMessage(errorMessage);
+      
+      addToast('error', message);
       
     }    
   }
@@ -214,7 +217,13 @@ const Caixa = ({ sale }) => {
       setCarrinho([]);
     } catch (err) {
       const errorMessage = err.response?.data?.message;
-      console.log(errorMessage);
+      var message = errorMessage;
+      if(typeof errorMessage != 'string') {
+          for(const key in errorMessage) {
+              message = errorMessage[key];
+          }
+      }
+      addToast('error', message);
     }   
   }
 
@@ -226,8 +235,6 @@ const Caixa = ({ sale }) => {
     setFinalizando(true);
 
     const formatDescontoVal = fmt(descontoVal).replace('R$','');
-
-    console.log(typeof formatDescontoVal);
 
     try {
       await Api.put(`/v1/sales/finish/${sale?.uuid}`, {
