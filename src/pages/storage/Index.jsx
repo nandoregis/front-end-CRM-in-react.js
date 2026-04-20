@@ -284,20 +284,6 @@ const StockMovement = ({ onVoltar }) => {
           </div>
         )}
 
-        {/* Erro */}
-        {erro && (
-          <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-4 py-3">
-            {erro}
-          </p>
-        )}
-
-        {/* Sucesso */}
-        {sucesso && (
-          <p className="text-sm text-green-700 bg-green-50 border border-green-100 rounded-lg px-4 py-3">
-            Movimentação registrada com sucesso!
-          </p>
-        )}
-
         {/* Ações */}
         {produto && (
           <div className="flex items-center justify-end gap-3">
