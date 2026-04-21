@@ -15,6 +15,8 @@ const Login = () => {
     const [isLogin, setIsLogin] = useState(false);
     const [password, setPassword] = useState();
     const [rateLimit, setRateLimit] = useState();
+
+    const baseUriApi = 'http://api-projects.localhost';
     
     const handleLogin = (e) => {
         e.preventDefault();
@@ -34,7 +36,7 @@ const Login = () => {
             return;
         }
 
-        axios.post("http://api-projects.localhost/v1/auth", {
+        axios.post(`${baseUriApi}/v1/auth`, {
             email: email,
             password : password
         })
@@ -59,7 +61,6 @@ const Login = () => {
     
     }
     
-
     return (
         <>
         {

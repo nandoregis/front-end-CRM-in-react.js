@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import LogoutIcon from "../svg/LogoutIcon";
 
 const Icon = ({ d, size = 16 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
@@ -21,6 +22,11 @@ const Icons = {
   menu:         "M3 12h18 M3 6h18 M3 18h18",
   close:        "M18 6L6 18 M6 6l12 12",
 };
+
+const logout = () => {
+  localStorage.removeItem();
+  window.location.href = "/login";
+}
 
 const nav = [
   { id: "dashboard", label: "Dashboard", icon: "dashboard", route:"/dashboard" },
@@ -136,8 +142,15 @@ export default function Sidebar({ active, setActive }) {
           ))}
         </nav>
 
-        <div className="px-4 py-3 border-t border-gray-100 text-xs text-gray-400">
-          v1.0.0
+        <div className="px-4 py-3 border-t border-gray-100 text-xs text-gray-400 flex justify-center">
+          <button 
+            className="cursor-pointer"
+            onClick={() => {
+
+            }}
+          >
+            <LogoutIcon/>
+          </button>
         </div>
       </aside>
     </>
