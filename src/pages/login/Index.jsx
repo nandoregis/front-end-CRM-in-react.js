@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import Validate from '../validate/Index';
 import { Navigate, useNavigate } from 'react-router-dom';
+import CONFIG from '../../config/Index';
 
 const Login = () => {
 
@@ -15,8 +16,6 @@ const Login = () => {
     const [isLogin, setIsLogin] = useState(false);
     const [password, setPassword] = useState();
     const [rateLimit, setRateLimit] = useState();
-
-    const baseUriApi = 'http://api-projects.localhost';
     
     const handleLogin = (e) => {
         e.preventDefault();
@@ -36,7 +35,7 @@ const Login = () => {
             return;
         }
 
-        axios.post(`${baseUriApi}/v1/auth`, {
+        axios.post(`${CONFIG.API.BASE_URL}/v1/auth`, {
             email: email,
             password : password
         })

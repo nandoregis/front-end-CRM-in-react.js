@@ -1,7 +1,7 @@
 
 const CONFIG = {
   API: {
-    BASE_URL: 'http://api-projects.localhost',
+    BASE_URL: 'https://api.nellure.com',
   },
 
   STORAGE: {
