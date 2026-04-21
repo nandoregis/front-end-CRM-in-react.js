@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // --- SVGs Minimalistas ---
 const IconRocket = () => (
@@ -15,6 +16,9 @@ const IconCode = () => (
 );
 
 export default function Home() {
+
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 font-sans">
       
@@ -59,15 +63,12 @@ export default function Home() {
 
       {/* Rodapé Simples */}
       <footer className="mt-20 text-slate-400 flex flex-col items-center gap-4">
-        <p className="text-sm">Quer saber quando lançarmos?</p>
-        <div className="flex gap-2">
-          <input 
-            type="email" 
-            placeholder="Seu melhor e-mail" 
-            className="px-4 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
-          />
-          <button className="bg-slate-900 text-white px-4 py-2 rounded-lg font-bold hover:bg-slate-800 transition">
-            Avisar-me
+        <p className="text-sm">Vamos entrar?</p>
+        <div onClick={ () => {
+          navigate('/entrar');
+        }} className="flex gap-2">
+          <button className="cursor-pointer bg-slate-900 text-white px-4 py-2 rounded-lg font-bold hover:bg-slate-800 transition">
+            Entrar
           </button>
         </div>
       </footer>
