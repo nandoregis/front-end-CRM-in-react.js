@@ -20,6 +20,7 @@ import SizeCreate from "../pages/sizes/components/SizeCreate/Index";
 import StockMovement from "../pages/storage/Index";
 import PDV from "../pages/pdv/Index";
 import PDVCaixa from "../pages/pdv/PDVCaixa";
+import Home from "../pages/home/Index";
 
 export default function AppRoutes() {
   return (
@@ -27,9 +28,7 @@ export default function AppRoutes() {
       <Routes>
 
         <Route path="/" element={
-          <>
-            <h2>Init page</h2>
-          </>
+          <Home/>
         } />
         
         <Route path="/entrar" element={
