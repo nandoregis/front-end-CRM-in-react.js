@@ -6,6 +6,7 @@ import Summary from "./Summary";
 import ProductSearch from "./ProductSearch";
 import { useToast } from "../../../context/ToastContext";
 import fmt from "./fmt";
+import { useNavigate } from "react-router-dom";
 
 const Caixa = ({ sale }) => {
 
@@ -30,6 +31,7 @@ const Caixa = ({ sale }) => {
 
   // ─── envio ────────────────────────────────────────────────────────────────
   const [finalizando, setFinalizando] = useState(false);
+  const [loading, setLoading]         = useState(false);
   const [erro, setErro]               = useState(null);
   const [sucesso, setSucesso]         = useState(false);
   const {addToast} = useToast();
@@ -38,7 +40,9 @@ const Caixa = ({ sale }) => {
   const subtotal    = carrinho.reduce((a, i) => a + i.preco * i.quantidade, 0);
   const descontoVal =  parseFloat(desconto) || 0;
   const total       = Math.max(subtotal - descontoVal, 0);
- 
+  
+  // ---------------------------------------------------------------------------
+  const navigate = useNavigate();
 
   const addProdutoNoDB = async (produto, variante, quantidade) => {
    
@@ -56,7 +60,7 @@ const Caixa = ({ sale }) => {
       });
 
     } catch (err) {
-      console.log(err.response);
+      addToast('error', FormatErrorMessage(err?.response?.data?.message));
     }
   }
 
@@ -99,14 +103,7 @@ const Caixa = ({ sale }) => {
         });
     
       } catch (err) {
-        const errorMessage = err.response.data.message;
-        var message = errorMessage;
-        if(typeof errorMessage != 'string') {
-            for(const key in errorMessage) {
-                message = errorMessage[key];
-            }
-        }
-        addToast('error', message);
+        addToast('error', FormatErrorMessage(err?.response?.data?.message));
       }
     }
 
@@ -200,14 +197,9 @@ const Caixa = ({ sale }) => {
 
     try {
       const res = await Api.delete(`/v1/sales/itens/d/delete/${produtoRemove.variante_uuid}`);
-      console.log(res.data.data);
       setCarrinho((p) => p.filter((i) => i.chave !== chave));
     } catch (err) {
-      const errorMessage = err.response?.data?.message;
-      var message = FormatErrorMessage(errorMessage);
-      
-      addToast('error', message);
-      
+      addToast('error', FormatErrorMessage(err.response?.data?.message));
     }    
   }
 
@@ -216,14 +208,7 @@ const Caixa = ({ sale }) => {
       const res = await Api.delete(`/v1/sales/itens/all/d/delete/sale/${sale.uuid}`);
       setCarrinho([]);
     } catch (err) {
-      const errorMessage = err.response?.data?.message;
-      var message = errorMessage;
-      if(typeof errorMessage != 'string') {
-          for(const key in errorMessage) {
-              message = errorMessage[key];
-          }
-      }
-      addToast('error', message);
+      addToast('error', FormatErrorMessage(err.response?.data?.message));
     }   
   }
 
@@ -244,17 +229,13 @@ const Caixa = ({ sale }) => {
       setSucesso(true);
       setCarrinho([]);
       setDesconto("");
-      setPagamento("dinheiro");
-      setTimeout(() => setSucesso(false), 3000);
+      setPagamento('dinheiro');
+      setTimeout(() => {
+        setSucesso(false);
+        navigate('/pdv');
+      }, 1000);
     } catch (err) {
-      const errorMessage = err.response?.data?.message;
-      var message = errorMessage;
-      if(typeof errorMessage != 'string') {
-          for(const key in errorMessage) {
-              message = errorMessage[key];
-          }
-      }
-      addToast('error', message);
+      addToast('error', FormatErrorMessage(err.response?.data?.message));
     } finally {
       setFinalizando(false);
     }

@@ -1,4 +1,6 @@
 export const FormatErrorMessage = ( erro ) => {
+    if(!erro) erro = "!";
+
     var message = erro;
     
     if(typeof erro != 'string') {
